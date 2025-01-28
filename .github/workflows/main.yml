@@ -56,8 +56,8 @@ jobs:
           SONAR_HOST_URL: "https://sonarcloud.io"
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=rohitsoni1209_trythat-landing \
-            -Dsonar.organization=your-org-key \
+            -Dsonar.projectKey=rohitsoni1209_trythat-Landing \
+            -Dsonar.organization=rohitsoni1209 \
             -Dsonar.sources=./src \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$SONAR_TOKEN \
