@@ -32,8 +32,8 @@ jobs:
 
     - name: Run SonarCloud scan
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: "https://sonarcloud.io"
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Store your SonarCloud token in GitHub Secrets
+        SONAR_HOST_URL: "https://sonarcloud.io" # SonarCloud URL
       run: |
         sonar-scanner \
           -Dsonar.projectKey=rohitsoni1209_trythat-Landing \
@@ -42,7 +42,6 @@ jobs:
           -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.login=$SONAR_TOKEN \
           -X
-
 
   deploy:
     name: Deploy Landing Page Application
