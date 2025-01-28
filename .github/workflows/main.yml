@@ -1,5 +1,5 @@
-name: Build and Deploy Landing Page with Docker
-#
+name: Build and Deploy Landing Page with Docker and SonarCloud
+
 on:
   push:
     branches:
@@ -25,6 +25,43 @@ jobs:
 
       - name: Push Docker Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/trythat-landing:latest
+
+  sonar-scan:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java 17 (required for SonarScanner)
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))" >> $GITHUB_ENV
+
+      - name: Install SonarScanner
+        run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+          mv sonar-scanner-4.8.0.2856-linux $HOME/sonar-scanner
+          echo "$HOME/sonar-scanner/bin" >> $GITHUB_PATH
+
+      - name: Run SonarCloud scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: "https://sonarcloud.io"
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=rohitsoni1209_trythat-landing \
+            -Dsonar.organization=your-org-key \
+            -Dsonar.sources=./src \
+            -Dsonar.host.url=$SONAR_HOST_URL \
+            -Dsonar.login=$SONAR_TOKEN \
+            -X
 
   deploy:
     name: Deploy Landing Page Application
